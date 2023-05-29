@@ -1,0 +1,54 @@
+<html>
+
+<body>
+    <div>
+        <label for="file-input">
+            <input type="file" id="file-input" />
+        </label>
+
+        <div>
+            <span id="status"></span>
+        </div>
+    </div>
+</body>
+
+<script>
+    var fileInput = document.getElementById("file-input");
+    var status = document.getElementById("status");
+
+    fileInput.addEventListener('change', (event) => {
+        console.log(event.target.files);
+        var selectedFiles = event.target.files;
+
+        var file = selectedFiles[0];
+        var formData = new FormData();
+        var xhr = new XMLHttpRequest();
+        formData.append("file", file);
+
+        xhr.open('POST', 'localhost:3000/v1/image', true);
+
+
+        // Make the fetch request
+        fetch('http://localhost:3000/v1/image', {
+            method: 'POST',
+            body: formData,
+        })
+            .then(async (response) => {
+                if (response.ok) {
+                    console.log('File(s) uploaded successfully!');
+                    // Perform any actions on successful upload
+                } else {
+                    var resp = await response.json();
+                    console.log(resp);
+                    console.error('Upload failed. Status:', response.status);
+                    // Handle upload failure
+                }
+            })
+            .catch((error) => {
+                console.error('Upload error:', error);
+                // Handle upload error
+            });
+    });
+</script>
+
+</html>
