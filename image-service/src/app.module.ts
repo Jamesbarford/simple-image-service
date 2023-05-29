@@ -1,24 +1,25 @@
 import {Module} from "@nestjs/common";
 import {SequelizeModule} from "@nestjs/sequelize";
-import {createConfig} from "./config";
+import {ServeStaticModule} from "@nestjs/serve-static";
+import {join} from "path";
+
 import {ConfigurationModule} from "./configuration/configuration.module";
 import {ConfigurationProvider} from "./configuration/configuration.provider";
 import {AppConfig} from "./types";
 import {DatabaseConfig} from "./database/database.config";
 import {ImageModule} from "./image/image.module";
 import {ImageBucketModule} from "./image/bucket/image.bucket.module";
-import {ServeStaticModule} from "@nestjs/serve-static";
-import {join} from "path";
+import {loadConfiguration} from "./configuration/loadConfiguration";
 
 @Module({
     imports: [
         ServeStaticModule.forRoot({
             rootPath: join(__dirname, "..", "public"),
-            serveRoot: "/"
+            serveRoot: "/",
         }),
         ConfigurationModule.forRootAsync<AppConfig>({
             global: true,
-            useValue: createConfig(),
+            useValue: loadConfiguration(),
         }),
         SequelizeModule.forRootAsync({
             useFactory: (args: ConfigurationProvider<AppConfig>) => {

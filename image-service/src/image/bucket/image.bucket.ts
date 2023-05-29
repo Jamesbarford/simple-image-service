@@ -60,7 +60,6 @@ export class ImageBucket {
                 ContentType: imageMimeType,
             });
 
-
             if (res.$metadata.httpStatusCode === 200) {
                 return `${this.bucketUrl}/${imageId}`;
             }
